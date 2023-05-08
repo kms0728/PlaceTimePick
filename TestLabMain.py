@@ -8,7 +8,86 @@ import Util as util
 
 TAG = "TestLabMain"
 
+import numpy
 
+
+
+#neural network definition
+class neuralNetwork :
+#    initialise the neural network
+    def __init__(self, inputnodes, hiddennodes, outputnodes, learningrate) :
+        #set number Of nodes an each input, hidden, output layer
+        self.inodes = inputnodes
+        self.hnodes = hiddennodes
+        self.onodes = outputnodes
+        #learning rate
+
+
+        # 가중치 행렬 wih와 who
+        # 배열 내 가중치는 w-i-j로 표기. 노드 i에서 다음 계층의 노드 j로 연결됨을 의미
+        # W11 W21
+        # W12 W22
+        self.wih = numpy.random.normal(0.0, pow(self.hnodes, -0.5), (self.hnodes, self.inodes))
+        self.who = numpy.random.normal(0.0, pow(self.onodes, -0.5), (self.onodes, self.hnodes))
+        # 학습률
+        self.lr = learningrate
+
+        # 활성화 함수로는 시그모이드 함수를 이용
+        self.activation_function = lambda x: scipy.special.expit(x)
+
+        pass
+
+    #train the neural network
+    def train(self,inputs_list,targets_list) :
+
+        inputs = numpy.array(inputs_list, ndmin=2).T
+        targets = numpy.array(targets_list, ndmin=2).T
+        # 은닉 계층으로 들어오는 신호를 계산
+        hidden_inputs = numpy.dot(self.wih, inputs)
+        # 은닉 계층에서 나가는 신호를 계산
+        hidden_outputs = self.activation_function(hidden_inputs)
+        # 최종 출력 계층으로 들어오는 신호를 계산
+        final_inputs = numpy.dot(self.who, hidden_outputs)
+        # 최종 출력 계층에서 나가는 신호를 계산
+        final_outputs = self.activation_function(final_inputs)
+        # 출력 계층의 오자는 (실제 값 - 계산 값)
+        output_errors = targets - final_outputs
+        # 은닉 계층의 오자는 가중치에 의해 나뉜 출력 계층의 오자들을 재조합해 계산
+        hidden_errors= numpy.dot(self.who.T, output_errors)
+
+        # 은닉 계층과 출력 계층 간의 가중치 업데이트
+        self.who += self.Ir * mnpy.dot((output_errors * final_outputs * (1.0 - final_outputs)), numpy.transpose(hidden_outputs))
+        # 입력 계층과 은닉 계층 간의 가중치 업데이트
+        self.wih += self.Ir * mnpy.dot((hidden_errors * hidden_outputs * (1.0 - hidden_outputs)), numpy.transpose(inputs))
+        pass
+
+    #query the neural network
+
+    def query(self, inputs_list):
+        # 입력 리스트를 2자원 행릴로 변환
+        inputs = numpy.array(inputs_list, ndmin=2).T
+        # 은닉 계층으로 들어오는 신호를 계산
+        hidden_inputs = numpy.dot(self.wih, inputs)
+        # 은닉 계층에서 나가는 신호를 계산
+        hidden_outputs = self.activation_function(hidden_inputs)
+    # 최종 출력 계층으로 들어오는 신호를 계산
+        final_inputs = numpy.dot(self.who, hidden_outputs)
+        # 최종 출력 계층에서 나가는 신호를 계산
+        final_outputs = self.activation_function(final_inputs)
+        return final_outputs
+        #number Of input, hidden and output nodes
+
+
+input_nodes = 3
+hidden_nodes = 3
+output_nodes = 3
+    #learning rate 18 0.3
+learning_rate = 0.3
+    #create instance Of neural network
+
+n = neuralNetwork(input_nodes,hidden_nodes,output_nodes,learning_rate )
+
+numpy.random.rand(3,3)
 
 
 
