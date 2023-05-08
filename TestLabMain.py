@@ -8,10 +8,6 @@ import Util as util
 
 TAG = "TestLabMain"
 
-
-
-
-
 # 변수 선언
 global root
 root = Tk()
@@ -53,6 +49,8 @@ def loadUI():
     btn.config(command = analyze)
     btn.place(x= 200,y=200,height=10,width=50)
     btn.pack()
+
+
 
     root.mainloop()
 
@@ -121,6 +119,19 @@ def analyze():
     print(" | index : %d" %index_2,end = '')
     print(" | 데이터 : ", get_line(text,index_2))
 
+
+class DataResult:
+    index = 0
+    score = 0
+
+def topScoreIndex(ind):
+    r = DataResult()
+    for i in range(0, currentLine):
+        if r.score < scoreTable[i][ind]:
+            r.score = scoreTable[i][ind]
+            r.index = i
+
+    return r
 
 global placeKey
 placeKey = ['건물','공간','위치','장소','서울','대전','대구','부산','강원']
